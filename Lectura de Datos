@@ -1,0 +1,104 @@
+def validacion(usuario1, contraseña1): 
+    usuario = "InnovaCode"
+    contraseña = "CodingCorporation"
+    validado = False
+    if (usuario == usuario1) and (contraseña == contraseña1):
+        print("Acceso permitido")
+        validado = True
+    else: 
+        print("Acceso denegado, contraseña o usuarios incorrectos")
+    return validado
+
+def dividir_linea(linea):
+    """Divide la línea en una lista, manejando casos donde el nombre del juego contiene comas"""
+    partes = []
+    entre_comillas = False
+    parte_actual = ''
+    for caracter in linea:
+        if caracter == '"':
+            entre_comillas = not entre_comillas #cuando encuentra comillas cambia el valor para indicar que sigue siendo la misma palabra
+        elif caracter == ',' and not entre_comillas: #si encuentra la coma, el valor de 'entre_comillas' ya esta en falso, ya que se invirtio en el paso anterior. 
+            partes.append(parte_actual.strip()) #La coma indica un cambio de palabra, por lo que se agrega a la lista nueva con las palabras limpias (variable 'partes')
+            parte_actual = '' #Se reinicia el valor de la palabra que se esta leyendo
+        else:
+            parte_actual += caracter
+    partes.append(parte_actual.strip())
+    return partes
+
+def criticacriticos(lista, mayorcritica, nombremayor):
+    """Recibe la lista como parámetro y busca el juego con mayor puntuación según los críticos e indica el nombre"""
+    try:  
+        if int(lista[0]) > mayorcritica:
+            mayorcritica = int(lista[0])
+            nombremayor = lista[1]
+    except ValueError:
+        pass
+    return mayorcritica, nombremayor
+
+def criticausuarios(lista, mayorcriticaus, nombremayorus):
+    """Recibe la lista como parámetro y busca el juego con mayor puntuación según los usuarios e indica el nombre"""
+    try:  
+        if float(lista[4]) > mayorcriticaus:
+            mayorcriticaus = float(lista[4])
+            nombremayorus = lista[1] 
+    except ValueError:
+        pass        
+    return mayorcriticaus, nombremayorus 
+
+def ver_desarrolladores(linea_lista, desarrolladores, cant_juegos, plataformas):
+    """Recibe las listas como parametros y comprueba si ya se encuentra la desarrolladora, si no la agrega.
+      Suma la cantidad de juegos y agrega las plataformas correspondientes a la desarrolladora"""
+    empresas = []
+    for empresa in linea_lista[7].split(','): #tiene en cuenta el caso donde mas de una desarrolladora participa en un videojuego
+        empresas.append(empresa.strip(" '[]")) #deja solo el nombre de la desarrolladora
+    for empresa in empresas: #Si hay mas de 1 desarrolladora usa los dos nombres
+        if empresa not in desarrolladores: #si la desarrolladora no se encuentra en la lista desarrolladores la agrega y obtiene su indice, para sumar la cantidad de juegos a su nombre, y las plataformas que utiliza
+            desarrolladores.append(empresa)
+            indice = desarrolladores.index(empresa)
+            cant_juegos.append(1) 
+            plataformas.append([]) #se crea una matriz ya que hay desarrolladoras con mas de una plataforma
+            plataformas[indice].append(linea_lista[2]) #se agregan a la lista en el indice correspondiente a la desarrolladora, ya que son listas paralelas, las plataformas
+        else: #si la desarrolladora ya se encuentra solo verifica que no este la plataforma y la agrega, sino no hace nada. Agrega un juego a nombre de la desarrolladora
+            indice = desarrolladores.index(empresa)
+            cant_juegos[indice] += 1 
+            if linea_lista[2] not in plataformas[indice]:
+                plataformas[indice].append(linea_lista[2])
+
+
+def mostrar_empresas(desarrolladores,cant_juegos, plataformas):
+    """Muestra de forma ordenada en pantalla las listas recibidas"""
+    print("-DESARROLLADORES-",' ' * (46- (len("desarrolladores"))),"-CANTIDAD DE JUEGOS-",' ' *18, "-PLATAFORMAS-")
+    for i in range(len(desarrolladores)):
+        print(desarrolladores[i].ljust(50), end="")
+        print(str(cant_juegos[i]).ljust(40), end="")
+        print(", ".join(plataformas[i]), end="")
+        print()
+
+
+def main():
+    usuario1 = input("ingrese el usuario: ")
+    contraseña1 = input("ingrese la contraseña: ")
+    resultado_validacion = validacion(usuario1, contraseña1)
+    if resultado_validacion:
+        archivo = open("NintendoGames.csv", mode="rt")
+        next(archivo)
+        mayorcritica = 0
+        nombremayor = ""
+        mayorcriticaus = 0
+        nombremayorus = ""
+        desarrolladores = []
+        cant_juegos = []
+        plataformas = []
+        for linea in archivo:
+            linea_lista = dividir_linea(linea)
+            mayorcritica, nombremayor = criticacriticos(linea_lista, mayorcritica, nombremayor)
+            mayorcriticaus, nombremayorus = criticausuarios(linea_lista, mayorcriticaus, nombremayorus) 
+            ver_desarrolladores(linea_lista,desarrolladores,cant_juegos, plataformas)
+        print()
+        print(f"El juego con mayor puntuación según los críticos es: {nombremayor} con una puntuación de: {mayorcritica}")
+        print(f"El juego con mayor puntuación según los usuarios es: {nombremayorus} con una puntuación de: {mayorcriticaus}")
+        print()
+        mostrar_empresas(desarrolladores,cant_juegos, plataformas) 
+
+if __name__ == "__main__":
+    main()
