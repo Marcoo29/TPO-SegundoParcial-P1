@@ -1,7 +1,7 @@
 # TPO-SegundoParcial-P1
 Segundo Parcial Programacion 1, Profesora Galati
 
-El programa esta encargado de leer un archivo que contiene informacion sobre videojuegos. Este programa es un TPO (trabajo practico obligatorio) de la materia "Programacion 1" de la Universidad Argentina de la Empresa (UADE), por lo tanto el objetivo del mismo no
+El programa está encargado de leer un archivo que contiene informacion sobre videojuegos. Este programa es un TPO (trabajo practico obligatorio) de la materia "Programacion 1" de la Universidad Argentina de la Empresa (UADE), por lo tanto el objetivo del mismo no
 es ser un programa reutilizable.
 
 El resultado final es una impresion por pantalla de los juegos con la calificación más alta de los críticos y la calificación más alta de los usuarios. Tambien se hace un informe sobre los desarrolladores de los mismos, mostrando al final la cantidad de juegos que 
