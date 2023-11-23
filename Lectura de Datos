@@ -1,13 +1,4 @@
-def validacion(usuario1, contraseña1): 
-    usuario = "InnovaCode"
-    contraseña = "CodingCorporation"
-    validado = False
-    if (usuario == usuario1) and (contraseña == contraseña1):
-        print("Acceso permitido")
-        validado = True
-    else: 
-        print("Acceso denegado, contraseña o usuarios incorrectos")
-    return validado
+import ValidacionRecibida as vali_recib
 
 def dividir_linea(linea):
     """Divide la línea en una lista, manejando casos donde el nombre del juego contiene comas"""
@@ -78,7 +69,7 @@ def mostrar_empresas(desarrolladores,cant_juegos, plataformas):
 def main():
     usuario1 = input("ingrese el usuario: ")
     contraseña1 = input("ingrese la contraseña: ")
-    resultado_validacion = validacion(usuario1, contraseña1)
+    resultado_validacion = vali_recib(usuario1, contraseña1)
     if resultado_validacion:
         archivo = open("NintendoGames.csv", mode="rt")
         next(archivo)
